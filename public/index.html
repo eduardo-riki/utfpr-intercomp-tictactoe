@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Velha</title>
+  <style>
+    .board { display: grid; grid-template-columns: repeat(3, 100px); gap: 10px; }
+    .cell { width: 100px; height: 100px; font-size: 2rem; text-align: center; line-height: 100px; border: 1px solid #000; }
+  </style>
+</head>
+<body>
+  <h1 id="vez-jogador">Sua vez, Jogador 01 (X)</h1>
+  <div class="board">
+    <div class="cell" id="cell-0"></div>
+    <div class="cell" id="cell-1"></div>
+    <div class="cell" id="cell-2"></div>
+    <div class="cell" id="cell-3"></div>
+    <div class="cell" id="cell-4"></div>
+    <div class="cell" id="cell-5"></div>
+    <div class="cell" id="cell-6"></div>
+    <div class="cell" id="cell-7"></div>
+    <div class="cell" id="cell-8"></div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('atualizar-tabuleiro', ({ posicoes, pontos_jogador1, pontos_jogador2, pontos_empate, jogada_vez }) => {
+      posicoes.forEach((posicao, index) => {
+        document.getElementById(`cell-${index}`).innerText = posicao;
+      });
+      document.getElementById('vez-jogador').innerText = `Sua vez, Jogador ${jogada_vez === 4 ? '01 (X)' : '02 (O)'}`;
+    });
+
+    socket.on('jogada-invalida', (msg) => {
+      alert(msg);
+    });
+
+    socket.on('resultado', (msg) => {
+      alert(msg);
+    });
+  </script>
+</body>
+</html>
